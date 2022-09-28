@@ -1,0 +1,131 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Notification {
+    langCode: String!
+    id: ID!
+    title: String!
+    body: String!
+    userId: Int!
+    read: Boolean!
+}
+
+input NewSimpleNotification{
+    langCode: String!
+    userId: Int!
+    orderId: Int!
+    orderType: String!
+    orderDescription: String!
+    hyperLink: String!
+}
+
+type SimpleNotification{
+    id: Int!
+    orderId: Int!
+    orderType: String!
+    status: Boolean!
+    orderDescription: String!
+    hyperLink: String!
+    createdTime: String!
+    userId: Int!
+    langCode: String!
+}
+
+input NewNotification {
+    id: ID!
+    title: String!
+    body: String!
+    userId: Int!
+
+}
+
+input MarkRead{
+    id: Int!
+}
+
+type Notifications {
+    notifications: [Notification!]
+    nextOffset: Int!
+}
+
+type SimpleNotifications{
+    notifications: [SimpleNotification!]
+    nextOffset: Int!
+    numberOfUnreadNotifications: Int
+}
+
+input RegisterToken {
+    userId: Int!
+    token: String!
+}
+
+input NotificationList{
+    count: Int
+    offset: Int
+    langCode: String
+    userId: Int
+}
+
+input ClearNotificationIn{
+    userId: Int
+}
+
+input OrderListingQuery{
+    userId: Int
+    count: Int
+    offset: Int
+}
+
+type OrderDetail{
+    status: String!
+    orderId: Int!
+    userId: Int!
+    orderDate: String!
+    totalCost: Float!
+    products: [ProductDetail]
+}
+
+type ProductDetail {
+    name: String!
+    thumbnailUrl: String!
+    count: Int!
+    pricePerUnit: Float!
+}
+
+type OrderListResponse {
+    orders: [OrderDetail]!
+    nextOffset: Int!
+}
+
+input ProductDetailIn{
+    name: String!
+    count: Int!
+    thumbnailUrl: String!
+    pricePerUnit: Float!
+}
+
+input NewOrder {
+    userId: Int!
+    totalCost: Float!
+    status: String!
+    products: [ProductDetailIn]!
+}
+
+type Query {
+    notifications(count: Int = 10, offset: Int=0): Notifications!
+    simpleNotifications(input: NotificationList): SimpleNotifications!
+    orders(input: OrderListingQuery): OrderListResponse
+    orderDetail(orderId: Int!): OrderDetail
+}
+
+
+type Mutation {
+    registerToken(input: RegisterToken ) : Boolean!
+    createNotification(input: NewNotification!): Notification!
+    clearNotification(input: ClearNotificationIn):Boolean!
+    createSimpleNotification(input: NewSimpleNotification) : SimpleNotification!
+    markRead(input: MarkRead): SimpleNotification!
+    newOrder(input: NewOrder): OrderDetail
+}
+
