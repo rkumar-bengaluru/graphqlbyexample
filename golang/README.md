@@ -11,7 +11,7 @@
 Query
 ---
 	mutation {
-    		createSimpleNotification (input : {
+    	   createSimpleNotification (input : {
         		langCode: "en",
         		userId : 101,
         		orderId : 8001,
@@ -25,13 +25,13 @@ Query
         		orderType
         		orderDescription
         		hyperLink
-    		}
+    	   }
 	}
 ---
     mutation {
-    markRead(input : {
+       markRead(input : {
         id : 8010
-    }) {
+       }) {
         id
         orderId
         orderType
@@ -42,7 +42,7 @@ Query
         userId
         langCode
     }
-}
+  }
 
 ---
     query {
