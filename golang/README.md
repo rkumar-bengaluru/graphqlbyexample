@@ -10,23 +10,23 @@
 
 Query
 ---
-mutation {
-    createSimpleNotification (input : {
-        langCode: "en",
-        userId : 101,
-        orderId : 8001,
-        orderType : "NewOrder",
-        orderDescription : "custom description",
-        hyperLink : "http://www.google.com"
-    }) {
-        langCode
-        userId
-        orderId
-        orderType
-        orderDescription
-        hyperLink
-    }
-}
+	mutation {
+    		createSimpleNotification (input : {
+        		langCode: "en",
+        		userId : 101,
+        		orderId : 8001,
+        		orderType : "NewOrder",
+        		orderDescription : "custom description",
+        		hyperLink : "http://www.google.com"
+    		}) {
+        		langCode
+        		userId
+        		orderId
+        		orderType
+        		orderDescription
+        		hyperLink
+    		}
+	}
 ---
     mutation {
     markRead(input : {
@@ -43,22 +43,7 @@ mutation {
         langCode
     }
 }
----
-mutation {
-    markRead(input : {
-        id : 8010
-    }) {
-        id
-        orderId
-        orderType
-        status
-        orderDescription
-        hyperLink
-        createdTime
-        userId
-        langCode
-    }
-}
+
 ---
     query {
         simpleNotifications (input : {
