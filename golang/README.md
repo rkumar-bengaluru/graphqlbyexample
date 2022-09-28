@@ -9,7 +9,7 @@
 
 
 Query
-
+---
 mutation {
     createSimpleNotification (input : {
         langCode: "en",
@@ -27,7 +27,7 @@ mutation {
         hyperLink
     }
 }
-----
+---
 mutation {
     markRead(input : {
         id : 8010
