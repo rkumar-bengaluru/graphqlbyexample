@@ -28,26 +28,21 @@ mutation {
     }
 }
 ---
-    query {
-        simpleNotifications (input : {
-            count : 5
-            offset :0
-            langCode: "en"
-            userId : 101
-        }) {
-            notifications {
-            langCode
-            userId
-            orderId
-            orderType
-            orderDescription
-            hyperLink
-            status
-            }
-            nextOffset,
-            numberOfUnreadNotifications
-        }
+    mutation {
+    markRead(input : {
+        id : 8010
+    }) {
+        id
+        orderId
+        orderType
+        status
+        orderDescription
+        hyperLink
+        createdTime
+        userId
+        langCode
     }
+}
 ---
 mutation {
     markRead(input : {
