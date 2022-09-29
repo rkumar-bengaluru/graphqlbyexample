@@ -1,0 +1,28 @@
+query clients {
+  clients {
+    id 
+    name
+    email
+    phone
+  },
+  client(input:1) {
+    id 
+    name
+    email
+    phone
+  },
+  projects {
+    id 
+    clientId
+    description
+    name
+    status
+  },
+  project(id:1) {
+    id 
+    clientId
+    description
+    name
+    status
+  }
+}
