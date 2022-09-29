@@ -26,3 +26,15 @@ query clients {
     status
   }
 }
+
+
+mutation {
+  addProject(
+    name: "eCommerce Website"
+    description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu."
+    clientId: "63354789fcc91b70992f21df"
+    status: NotStarted
+  ) {
+    name
+  }
+}
