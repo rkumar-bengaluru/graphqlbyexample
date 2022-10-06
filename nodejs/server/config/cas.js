@@ -37,5 +37,16 @@ module.exports = {
         })
         
         return p;
+    },
+    enforce: async function(sub,resource,action) {
+        res = await _enforcer.enforce(sub,resource,action);
+        console.log("enforce response " + res);
+        return res;
+    },
+    addRoleToUser: async function(user,role) {
+      
+        res = await _enforcer.addRoleForUser(user,role);
+        console.log(res);
+        return true;
     }
 };

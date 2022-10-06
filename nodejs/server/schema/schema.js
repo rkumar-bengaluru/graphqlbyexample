@@ -6,7 +6,8 @@ const {
     GraphQLSchema, 
     GraphQLList, 
     GraphQLNonNull,
-    GraphQLEnumType
+    GraphQLEnumType,
+    GraphQLBoolean
     } = require('graphql');
 
     var casUtil = require( '../config/cas' );
@@ -16,6 +17,7 @@ const Project = require('../models/Project');
 const Client = require('../models/Client');
 const Policy = require('../models/Policy');
 const Group = require('../models/Group');
+const AResponse = require('../models/AResponse');
 
 
 
@@ -72,6 +74,14 @@ const GroupType = new GraphQLObjectType({
     })
 });
 
+// group type
+const AccessResponse = new GraphQLObjectType({
+    name : "AccessResponse",
+    fields : () => ({
+       status : {type : GraphQLBoolean},
+    })
+});
+
 const RootQuery = new GraphQLObjectType({
     name : "RootQueryType",
     fields : {
@@ -97,6 +107,23 @@ const RootQuery = new GraphQLObjectType({
                 return casUtil.listPolicy();
             }
 
+        },
+        checkAccess: {
+            type: AccessResponse,
+            args: {
+                subject : {type: GraphQLString},
+                resource : {type: GraphQLString},
+                action : {type: GraphQLString},
+            },
+            resolve(parent, args) {
+                console.log(args.subject,args.resource,args.action)
+                res = casUtil.enforce(args.subject,args.resource,args.action);
+                ares =  new AResponse({
+                    status: res
+                });
+                console.log(ares)
+                return ares;
+            }
         },
         projects: {
             type: new GraphQLList(ProjectType),
@@ -156,7 +183,7 @@ const mutation = new GraphQLObjectType({
                     name: args.name,
                     subject: args.subject,
                 });
-                return grp.save();
+                return casUtil.addRoleToUser(args.name,args.subject)
             }
         },
         addClient : {
