@@ -9,10 +9,18 @@ const {
     GraphQLEnumType
     } = require('graphql');
 
+const casbinInit = require('../config/casbin.js')
+
 // moongoose model
 const Project = require('../models/Project');
 const Client = require('../models/Client');
+const Policy = require('../models/Policy');
+const Group = require('../models/Group');
+
+
+
 const { default: mongoose } = require('mongoose');
+const e = casbinInit();
 
 //  client type
 
@@ -40,6 +48,27 @@ const ProjectType = new GraphQLObjectType({
                 return Client.findById(parent.clientId)
             }
         }
+    })
+});
+
+// policy type
+const PolicyType = new GraphQLObjectType({
+    name : "Policy",
+    fields : () => ({
+        id : {type: GraphQLID},
+        subject : {type : GraphQLString},
+        resource : {type : GraphQLString},
+        action : {type : GraphQLString},
+        effect : {type : GraphQLString},
+    })
+});
+// group type
+const GroupType = new GraphQLObjectType({
+    name : "Group",
+    fields : () => ({
+        id : {type: GraphQLID},
+        name : {type : GraphQLString},
+        subject : {type : GraphQLString},
     })
 });
 
@@ -83,6 +112,46 @@ const RootQuery = new GraphQLObjectType({
 const mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
+        addPolicy : {
+            type: PolicyType,
+            args: {
+                subject : {type : new GraphQLNonNull(GraphQLString)},
+                resource : {type : new GraphQLNonNull(GraphQLString)},
+                action : {type : new GraphQLNonNull(GraphQLString)},
+                effect : {type : new GraphQLNonNull(GraphQLString)},
+            },
+            resolve(parent,args) {
+                const policy = new Policy({
+                    subject: args.subject,
+                    resource: args.resource,
+                    action: args.action,
+                    effect: args.effect
+                });
+                try {
+                    //enforcer.addPolicy(policy.subject,policy.subject,policy.action,policy.effect)
+                    
+                    e.addRoleForUser(policy.subject,policy.subject,policy.action,policy.effect);
+                    
+                }catch(e) {
+                    console.log(e);
+                }
+                return policy;
+            }
+        },
+        addGroup : {
+            type: GroupType,
+            args: {
+                name : {type : new GraphQLNonNull(GraphQLString)},
+                subject : {type : new GraphQLNonNull(GraphQLString)},
+            },
+            resolve(parent,args) {
+                const grp = new Group({
+                    name: args.name,
+                    subject: args.subject,
+                });
+                return grp.save();
+            }
+        },
         addClient : {
             type: ClientType,
             args: {
