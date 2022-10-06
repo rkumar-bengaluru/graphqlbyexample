@@ -9,7 +9,7 @@ const {
     GraphQLEnumType
     } = require('graphql');
 
-const casbinInit = require('../config/casbin.js')
+    var casUtil = require( '../config/cas' );
 
 // moongoose model
 const Project = require('../models/Project');
@@ -20,7 +20,7 @@ const Group = require('../models/Group');
 
 
 const { default: mongoose } = require('mongoose');
-const e = casbinInit();
+
 
 //  client type
 
@@ -91,6 +91,13 @@ const RootQuery = new GraphQLObjectType({
             }
 
         },
+        policies : {
+            type: new GraphQLList(PolicyType),
+            resolve(parent, args) {
+                return casUtil.listPolicy();
+            }
+
+        },
         projects: {
             type: new GraphQLList(ProjectType),
             resolve(parent,args) {
@@ -129,8 +136,8 @@ const mutation = new GraphQLObjectType({
                 });
                 try {
                     //enforcer.addPolicy(policy.subject,policy.subject,policy.action,policy.effect)
-                    
-                    e.addRoleForUser(policy.subject,policy.subject,policy.action,policy.effect);
+                    casUtil.save(policy)
+                    //e.addRoleForUser(policy.subject,policy.subject,policy.action,policy.effect);
                     
                 }catch(e) {
                     console.log(e);

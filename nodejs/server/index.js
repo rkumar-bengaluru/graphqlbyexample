@@ -7,9 +7,13 @@ const schema = require('./schema/schema.js')
 const connectDB = require('./config/db.js')
 const app = express();
 const cors = require('cors')
+var casUtil = require( './config/cas' );
 // connect to database
 console.log(encodeURIComponent(process.env.MONGO_DB_URL))
 connectDB();
+casUtil.connectToServer(function( err, client ) {
+    if (err) console.log(err);
+});
 
 app.use(cors());
 app.use('/graphql',graphqlHTTP({
