@@ -75,10 +75,14 @@ const GroupType = new GraphQLObjectType({
 });
 
 // group type
-const AccessResponse = new GraphQLObjectType({
+const AccessResponseType = new GraphQLObjectType({
     name : "AccessResponse",
     fields : () => ({
-       status : {type : GraphQLBoolean},
+        id : {type: GraphQLID},
+        status : {type : GraphQLBoolean},
+        subject : {type : GraphQLString},
+        resource : {type : GraphQLString},
+        action : {type : GraphQLString},
     })
 });
 
@@ -109,17 +113,20 @@ const RootQuery = new GraphQLObjectType({
 
         },
         checkAccess: {
-            type: AccessResponse,
+            type: AccessResponseType,
             args: {
                 subject : {type: GraphQLString},
                 resource : {type: GraphQLString},
                 action : {type: GraphQLString},
             },
-            resolve(parent, args) {
+            async resolve(parent, args) {
                 console.log(args.subject,args.resource,args.action)
-                res = casUtil.enforce(args.subject,args.resource,args.action);
-                ares =  new AResponse({
-                    status: res
+                res = await casUtil.enforce(args.subject,args.resource,args.action);
+                const ares = new AResponse({
+                    status: res,
+                    resource: args.resource,
+                    action: args.action,
+                    subject: args.subject
                 });
                 console.log(ares)
                 return ares;
